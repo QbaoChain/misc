@@ -1,0 +1,5 @@
+spring:
+  cloud:
+    config:
+      uri: http://172.16.16.128:4021
+      profile: dev
