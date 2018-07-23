@@ -3,3 +3,6 @@ spring:
     name: BlockchainApplication
   profiles:
     active: @env@
+
+web3j:
+  url: http://api.etherscan.io/api
