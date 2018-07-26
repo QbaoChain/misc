@@ -176,7 +176,7 @@ public class Application {
 	}
 
 	public static String lastTxHash = null;
-	@Scheduled(fixedRate = 60000)
+//	@Scheduled(fixedRate = 60000)
 	public void sentQtumToken() throws Exception {
 		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
 		String fromAddr = "QPZhh95Gbp67KUgLsy3XZzQUPkFUuXHCw3";
