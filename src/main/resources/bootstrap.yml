@@ -6,3 +6,9 @@ spring:
 
 web3j:
   url: http://api.etherscan.io/api
+
+qtum:
+  httpUrl: http://106.14.200.176:8080
+  url: http://106.15.94.35:3889
+  username: admin
+  password: admin

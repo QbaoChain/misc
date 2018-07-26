@@ -1,4 +1,4 @@
-package com.aethercoder.blockchain;
+package com.aethercoder.misc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

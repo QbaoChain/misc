@@ -74,6 +74,16 @@
 			<artifactId>abi</artifactId>
 			<version>3.4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.designsters</groupId>
+			<artifactId>android-fork-bitcoinj</artifactId>
+			<version>1.0.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
 
 	</dependencies>
 

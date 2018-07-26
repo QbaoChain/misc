@@ -1,17 +1,16 @@
 package com.aethercoder.misc;
 
+import com.aethercoder.misc.eth.EthService;
+import com.aethercoder.misc.qtum.QtumService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
-import com.aethercoder.basic.config.rest.RestTemplateCust;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.*;
@@ -32,32 +31,36 @@ public class Application {
 	@Autowired
 	private EthService ethService;
 
+	@Autowired
+	private QtumService qtumService;
+
 	public static Map<String, String> addrSeedMap = new HashMap<>();
 
-	@Bean
-	@LoadBalanced
-	public RestTemplate restTemplate() {
-		RestTemplate restTemplate = new RestTemplateCust();
-		return restTemplate;
-	}
+//	@Bean
+//	@LoadBalanced
+//	public RestTemplate restTemplate() {
+//		RestTemplate restTemplate = new RestTemplateCust();
+//		return restTemplate;
+//	}
 
 	@Bean
 	public RestTemplate restTemplateOrigin() {
 		RestTemplate restTemplate = new RestTemplate();
 		return restTemplate;
 	}
+
 	public static void main(String[] args) throws Exception{
 
-		File file = new File("/Users/hepengfei/Downloads/ethAddress.txt");
-		BufferedReader bf = new BufferedReader(new FileReader(file));
-
-		String content = "";
-
-		while ((content = bf.readLine()) != null) {
-//			content = bf.readLine();
-			String[] addrSeed = content.split("   ");
-			addrSeedMap.put(addrSeed[0], addrSeed[1]);
-		}
+//		File file = new File("/Users/hepengfei/Downloads/ethAddress.txt");
+//		BufferedReader bf = new BufferedReader(new FileReader(file));
+//
+//		String content = "";
+//
+//		while ((content = bf.readLine()) != null) {
+////			content = bf.readLine();
+//			String[] addrSeed = content.split("   ");
+//			addrSeedMap.put(addrSeed[0], addrSeed[1]);
+//		}
 
 		SpringApplication.run(Application.class, args);
 
@@ -134,7 +137,7 @@ public class Application {
 	}
 
 
-	@Scheduled(fixedRate = 10000)
+//	@Scheduled(fixedRate = 10000)
 	public void sendToken() throws Exception{
 		System.out.println("start send token");
 		Set<String> fromAddrs = addrSeedMap.keySet();
@@ -170,5 +173,16 @@ public class Application {
 			System.out.println("no address remaining. exit");
 			System.exit(0);
 		}
+	}
+
+//	@Scheduled(fixedRate = 3000)
+	public void sentQtumToken() throws Exception {
+		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
+		String fromAddr = "QPZhh95Gbp67KUgLsy3XZzQUPkFUuXHCw3";
+		String toAddr = "QgMXfxJk8q93iPwh1gNe7FJTFV5Dw2pWhc";
+		String contractAddr = "09800417b097c61b9fd26b3ddde4238304a110d5";
+		String txid = qtumService.sendToken(seed, fromAddr, toAddr, contractAddr, "0.01");
+		System.out.println(txid);
+		System.exit(0);
 	}
 }

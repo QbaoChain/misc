@@ -1,4 +1,4 @@
-package com.aethercoder.misc;
+package com.aethercoder.misc.qtum;
 
 import com.google.common.collect.ImmutableList;
 import org.bitcoinj.crypto.ChildNumber;
@@ -125,5 +125,14 @@ public class KeyStorage implements Serializable {
 
     public void setAddressCount(int addressCount) {
         this.addressCount = addressCount;
+    }
+
+    public static void main(String... args) {
+        String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
+        KeyStorage keyStorage = new KeyStorage(seed);
+        keyStorage.importWallet();
+        for(int i = 0; i < 10; i++) {
+            System.out.println(keyStorage.getAddress(i));
+        }
     }
 }

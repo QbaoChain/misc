@@ -1,4 +1,4 @@
-package com.aethercoder.misc;
+package com.aethercoder.misc.qtum;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.QtumMainNetParams;

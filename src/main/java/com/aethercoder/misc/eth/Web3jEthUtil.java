@@ -1,4 +1,4 @@
-package com.aethercoder.misc;
+package com.aethercoder.misc.eth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ public class Web3jEthUtil {
     @Value( "${web3j.url}" )
     private String url;
 
-    @Autowired
+//    @Autowired
     private RestTemplate restTemplateOrigin;
 
 

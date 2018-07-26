@@ -1,4 +1,4 @@
-package com.aethercoder.misc;
+package com.aethercoder.misc.eth;
 
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
