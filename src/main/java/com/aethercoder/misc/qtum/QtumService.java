@@ -32,6 +32,15 @@ public class QtumService {
         return txId;
     }
 
+    public int getTransactionConfirmation(String txHash) {
+        Map txMap = qtumUtil.getTransaction(txHash);
+        if (txMap.get("confirmations") == null) {
+            return 0;
+        }
+        int confirmations = (Integer)txMap.get("confirmations");
+        return confirmations;
+    }
+
     private String getTokenDecigetTokenDecimalmal(String contractAddress) {
         String decimal;
         String date = "";

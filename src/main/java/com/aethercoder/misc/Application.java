@@ -175,14 +175,27 @@ public class Application {
 		}
 	}
 
-//	@Scheduled(fixedRate = 3000)
+	public static String lastTxHash = null;
+	@Scheduled(fixedRate = 60000)
 	public void sentQtumToken() throws Exception {
 		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
 		String fromAddr = "QPZhh95Gbp67KUgLsy3XZzQUPkFUuXHCw3";
 		String toAddr = "QgMXfxJk8q93iPwh1gNe7FJTFV5Dw2pWhc";
 		String contractAddr = "09800417b097c61b9fd26b3ddde4238304a110d5";
+
+		if (lastTxHash != null) {
+			int txConfirmations = qtumService.getTransactionConfirmation(lastTxHash);
+
+			if (txConfirmations == 0) {
+				System.out.println(txHash + " not confirmed yet.");
+				return;
+			}
+		}
+
+		String amount = "0.01";
 		String txid = qtumService.sendToken(seed, fromAddr, toAddr, contractAddr, "0.01");
+		System.out.println("from: " + fromAddr + " to: " + toAddr + " contract: " + contractAddr + " amount: " + amount);
 		System.out.println(txid);
-		System.exit(0);
+//		System.exit(0);
 	}
 }
