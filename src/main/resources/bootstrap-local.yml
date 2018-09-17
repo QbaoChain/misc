@@ -1,8 +1,8 @@
 eureka:
     client:
         fetchRegistry: false
-        registerWithEureka: true
+        registerWithEureka: false
         serviceUrl:
-            defaultZone: http://43.254.148.147:4020/eureka/
+            defaultZone: http://localhost:4020/eureka/
 server:
     port: 4027

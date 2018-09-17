@@ -10,25 +10,34 @@ import java.math.BigDecimal;
  */
 public class UnspentOutput {
 
+    /**
+     * address : QfNpqYMjmnCwAu1V5fvxrCaNDrPHRNdQX6
+     * txid : fd45045dd2674a97fec15abf6dffc5330fe3ac26426cb48c72f0fa4b09a5eab0
+     * outputIndex : 1
+     * script : 76a914cded3e26d55fe9c5055982d17870b2861f09173388ac
+     * satoshis : 890185800
+     * height : 63674
+     * isStake : false
+     * confirmations : 1704
+     */
     private String address;
-    @JsonProperty("tx_hash")
-    private String txHash;
-    private Integer vout;
-    @JsonProperty("txout_scriptPubKey")
-    private String txoutScriptPubKey;
-    private BigDecimal amount;
-    @JsonProperty("block_height")
-    private Long blockHeight;
-    @JsonProperty("pubkey_hash")
-    private String pubkeyHash;
-    @JsonProperty("is_stake")
-    private Boolean isStake;
-    private Integer confirmations;
 
-    public boolean isOutputAvailableToPay(){
-        if ( null== isStake){ return true;}
-        if(isStake ){
-            return confirmations > 500;
+    private String txid;
+
+    private BigDecimal outputIndex;
+
+    private String script;
+
+    private BigDecimal satoshis;
+
+    private BigDecimal height;
+
+    private boolean isStake;
+    private BigDecimal confirmations;
+
+    public boolean isOutputAvailableToPay() {
+        if (isStake) {
+            return confirmations.longValue() > 500;
         }
         return true;
     }
@@ -41,67 +50,63 @@ public class UnspentOutput {
         this.address = address;
     }
 
-    public String getTxHash() {
-        return txHash;
+    public String getTxid() {
+        return txid;
     }
 
-    public void setTxHash(String txHash) {
-        this.txHash = txHash;
+    public void setTxid(String txid) {
+        this.txid = txid;
     }
 
-    public Integer getVout() {
-        return vout;
+    public BigDecimal getOutputIndex() {
+        return outputIndex == null ? new BigDecimal("0") : outputIndex;
     }
 
-    public void setVout(Integer vout) {
-        this.vout = vout;
+    public void setOutputIndex(BigDecimal outputIndex) {
+        this.outputIndex = outputIndex;
     }
 
-    public String getTxoutScriptPubKey() {
-        return txoutScriptPubKey;
+    public String getScript() {
+        return script;
     }
 
-    public void setTxoutScriptPubKey(String txoutScriptPubKey) {
-        this.txoutScriptPubKey = txoutScriptPubKey;
+    public void setScript(String script) {
+        this.script = script;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getSatoshis() {
+        BigDecimal resultValue = new BigDecimal("0");
+        if (satoshis.longValue() != 0) {
+            resultValue = satoshis.divide(Constants.BIT_COIN);
+        }
+        return new BigDecimal(CommonUtility.formatQTUMDecimal(satoshis.doubleValue()));
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setSatoshis(BigDecimal satoshis) {
+        this.satoshis = satoshis;
     }
 
-    public Long getBlockHeight() {
-        return blockHeight;
+    public BigDecimal getHeight() {
+        return height;
     }
 
-    public void setBlockHeight(Long blockHeight) {
-        this.blockHeight = blockHeight;
+    public void setHeight(BigDecimal height) {
+        this.height = height;
     }
 
-    public String getPubkeyHash() {
-        return pubkeyHash;
-    }
-
-    public void setPubkeyHash(String pubkeyHash) {
-        this.pubkeyHash = pubkeyHash;
-    }
-
-    public Boolean getStake() {
+    public boolean isIsStake() {
         return isStake;
     }
 
-    public void setStake(Boolean stake) {
-        isStake = stake;
+    public void setIsStake(boolean isStake) {
+        this.isStake = isStake;
     }
 
-    public Integer getConfirmations() {
+    public BigDecimal getConfirmations() {
         return confirmations;
     }
 
-    public void setConfirmations(Integer confirmations) {
+    public void setConfirmations(BigDecimal confirmations) {
         this.confirmations = confirmations;
     }
 }

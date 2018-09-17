@@ -1,0 +1,82 @@
+Manifest-Version: 1.0
+Class-Path: libs/spring-boot-autoconfigure-1.5.4.RELEASE.jar libs/spri
+ ng-boot-1.5.4.RELEASE.jar libs/spring-security-core-4.2.3.RELEASE.jar
+  libs/bcprov-jdk15on-1.54.jar libs/asm-util-5.0.3.jar libs/spring-clo
+ ud-starter-1.2.5.RELEASE.jar libs/commons-codec-1.10.jar libs/joda-ti
+ me-2.9.9.jar libs/spring-core-4.3.9.RELEASE.jar libs/ribbon-transport
+ -2.2.2.jar libs/bitcoinj-core-1.0.12.jar libs/antlr-2.7.7.jar libs/bc
+ pkix-jdk15on-1.55.jar libs/jnr-unixsocket-0.15.jar libs/reflections-0
+ .9.11.jar libs/tuples-3.4.0.jar libs/spring-boot-starter-tomcat-1.5.4
+ .RELEASE.jar libs/classmate-1.3.3.jar libs/commons-collections-3.2.2.
+ jar libs/spring-context-4.3.9.RELEASE.jar libs/woodstox-core-asl-4.4.
+ 1.jar libs/httpclient-4.5.3.jar libs/spring-security-config-4.2.3.REL
+ EASE.jar libs/jettison-1.3.7.jar libs/commons-configuration-1.8.jar l
+ ibs/spring-security-rsa-1.0.3.RELEASE.jar libs/mapstruct-1.1.0.Final.
+ jar libs/jcip-annotations-1.0.jar libs/aopalliance-1.0.jar libs/guava
+ -18.0.jar libs/spring-boot-starter-1.5.4.RELEASE.jar libs/spring-data
+ -commons-1.13.4.RELEASE.jar libs/core-1.51.0.0.jar libs/spring-expres
+ sion-4.3.9.RELEASE.jar libs/netty-codec-4.0.27.Final.jar libs/netty-c
+ odec-http-4.0.27.Final.jar libs/spring-plugin-metadata-1.2.0.RELEASE.
+ jar libs/javax.inject-1.jar libs/jnr-ffi-2.1.2.jar libs/jersey-core-1
+ .19.1.jar libs/spring-aop-4.3.9.RELEASE.jar libs/log4j-over-slf4j-1.7
+ .25.jar libs/byte-buddy-1.6.14.jar libs/spring-boot-actuator-1.5.4.RE
+ LEASE.jar libs/ribbon-core-2.2.2.jar libs/xpp3_min-1.1.4c.jar libs/sp
+ ring-boot-starter-data-redis-1.5.4.RELEASE.jar libs/springfox-spi-2.7
+ .0.jar libs/ribbon-eureka-2.2.2.jar libs/netflix-infix-0.3.0.jar libs
+ /httpcore-4.4.6.jar libs/spring-oxm-4.3.9.RELEASE.jar libs/qbao-basic
+ -1.0-20180828.042311-81.jar libs/stringtemplate-3.2.1.jar libs/jackso
+ n-core-2.8.8.jar libs/spring-data-keyvalue-1.2.4.RELEASE.jar libs/jul
+ -to-slf4j-1.7.25.jar libs/spring-tx-4.3.9.RELEASE.jar libs/rxnetty-0.
+ 4.9.jar libs/ribbon-httpclient-2.2.2.jar libs/netflix-eventbus-0.3.0.
+ jar libs/crypto-3.4.0.jar libs/jsr305-2.0.1.jar libs/netty-common-4.0
+ .27.Final.jar libs/swagger-models-1.5.13.jar libs/spring-web-4.3.9.RE
+ LEASE.jar libs/hibernate-validator-5.3.5.Final.jar libs/springfox-swa
+ gger-common-2.7.0.jar libs/android-fork-bitcoinj-1.0.12.jar libs/asm-
+ 5.0.3.jar libs/asm-commons-5.0.3.jar libs/archaius-core-0.7.4.jar lib
+ s/springfox-core-2.7.0.jar libs/spring-cloud-netflix-core-1.3.6.RELEA
+ SE.jar libs/jersey-client-1.19.1.jar libs/spring-boot-starter-securit
+ y-1.5.4.RELEASE.jar libs/core-3.4.0.jar libs/spring-data-redis-1.8.4.
+ RELEASE.jar libs/jffi-1.2.14.jar libs/springfox-swagger2-2.7.0.jar li
+ bs/gson-2.8.0.jar libs/netty-transport-native-epoll-4.0.27.Final.jar 
+ libs/jcl-over-slf4j-1.7.25.jar libs/jnr-posix-3.0.33.jar libs/spring-
+ cloud-netflix-eureka-client-1.3.6.RELEASE.jar libs/commons-lang3-3.4.
+ jar libs/jackson-databind-2.8.8.jar libs/ribbon-loadbalancer-2.2.2.ja
+ r libs/servo-internal-0.10.1.jar libs/okhttp-2.7.2.jar libs/utils-3.4
+ .0.jar libs/ribbon-2.2.2.jar libs/jffi-1.2.14-native.jar libs/rlp-3.4
+ .0.jar libs/spring-cloud-starter-archaius-1.3.6.RELEASE.jar libs/spri
+ ng-context-support-4.3.9.RELEASE.jar libs/netty-transport-4.0.27.Fina
+ l.jar libs/netty-buffer-4.0.27.Final.jar libs/eureka-core-1.6.2.jar l
+ ibs/stax2-api-3.1.4.jar libs/xmlpull-1.1.3.1.jar libs/jedis-2.9.0.jar
+  libs/antlr-runtime-3.4.jar libs/xstream-1.4.9.jar libs/logging-inter
+ ceptor-3.8.1.jar libs/spring-security-web-4.2.3.RELEASE.jar libs/comm
+ ons-jxpath-1.3.jar libs/eureka-client-1.6.2.jar libs/jnr-enxio-0.14.j
+ ar libs/commons-lang-2.6.jar libs/spring-cloud-starter-eureka-1.3.6.R
+ ELEASE.jar libs/spring-boot-starter-logging-1.5.4.RELEASE.jar libs/jn
+ r-constants-0.9.6.jar libs/commons-math-2.2.jar libs/okio-1.13.0.jar 
+ libs/spring-cloud-commons-1.2.5.RELEASE.jar libs/HdrHistogram-2.1.9.j
+ ar libs/validation-api-1.1.0.Final.jar libs/hystrix-core-1.5.12.jar l
+ ibs/rxnetty-servo-0.4.9.jar libs/jackson-annotations-2.8.0.jar libs/s
+ pringfox-schema-2.7.0.jar libs/stax-api-1.0-2.jar libs/aspectjweaver-
+ 1.8.10.jar libs/orchid-1.2.1.jar libs/spring-cloud-starter-config-1.3
+ .4.RELEASE.jar libs/spring-plugin-core-1.2.0.RELEASE.jar libs/asm-tre
+ e-5.0.3.jar libs/asm-analysis-5.0.3.jar libs/spring-boot-starter-aop-
+ 1.5.4.RELEASE.jar libs/abi-3.4.0.jar libs/spring-cloud-context-1.2.5.
+ RELEASE.jar libs/tomcat-embed-core-8.5.15.jar libs/commons-pool2-2.4.
+ 2.jar libs/snakeyaml-1.17.jar libs/spring-beans-4.3.9.RELEASE.jar lib
+ s/jersey-apache-client4-1.19.1.jar libs/okhttp-3.8.1.jar libs/servo-c
+ ore-0.10.1.jar libs/rxjava-1.1.10.jar libs/spring-webmvc-4.3.9.RELEAS
+ E.jar libs/spring-boot-starter-actuator-1.5.4.RELEASE.jar libs/stax-a
+ pi-1.0.1.jar libs/spring-security-crypto-4.2.3.RELEASE.jar libs/slf4j
+ -api-1.7.25.jar libs/logback-core-1.1.11.jar libs/tomcat-embed-websoc
+ ket-8.5.15.jar libs/jsr311-api-1.1.1.jar libs/protobuf-java-2.6.1.jar
+  libs/spring-cloud-config-client-1.3.4.RELEASE.jar libs/logback-class
+ ic-1.1.11.jar libs/jnr-x86asm-1.0.2.jar libs/guice-4.1.0.jar libs/net
+ flix-statistics-0.1.1.jar libs/springfox-swagger-ui-2.7.0.jar libs/to
+ mcat-embed-el-8.5.15.jar libs/netty-handler-4.0.27.Final.jar libs/swa
+ gger-annotations-1.5.13.jar libs/rxnetty-contexts-0.4.9.jar libs/jbos
+ s-logging-3.3.1.Final.jar libs/spring-cloud-starter-ribbon-1.3.6.RELE
+ ASE.jar libs/spring-boot-starter-web-1.5.4.RELEASE.jar libs/springfox
+ -spring-web-2.7.0.jar libs/javassist-3.21.0-GA.jar libs/scrypt-1.4.0.
+ jar libs/netflix-commons-util-0.1.1.jar
+Main-Class: com.aethercoder.misc.Application
+

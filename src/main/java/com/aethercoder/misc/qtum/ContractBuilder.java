@@ -3,6 +3,7 @@ package com.aethercoder.misc.qtum;
 import com.aethercoder.basic.exception.AppException;
 import com.aethercoder.misc.qtum.sha3.sha.Keccak;
 import com.aethercoder.misc.qtum.sha3.sha.Parameters;
+import com.aethercoder.misc.qtum.walletTransaction.CommonUtility;
 import com.aethercoder.misc.qtum.walletTransaction.ContractMethod;
 import com.aethercoder.misc.qtum.walletTransaction.ContractMethodParameter;
 import com.aethercoder.misc.qtum.walletTransaction.UnspentOutput;
@@ -191,7 +192,7 @@ public class ContractBuilder {
         List<UnspentOutput> useUnspentOutputs = new ArrayList<>();
         boolean isEnough = false;
         for (UnspentOutput unspentOutput1 : unspentOutputs) {
-            totalAmount = totalAmount.add(unspentOutput1.getAmount());
+            totalAmount = totalAmount.add(unspentOutput1.getSatoshis());
             useUnspentOutputs.add(unspentOutput1);
             if(isEnough){
                 break;
@@ -219,10 +220,10 @@ public class ContractBuilder {
             if (deterministicKey.toAddress(CurrentNetParams.getNetParams()).toString().equals(useUnspentOutputs.get(0).getAddress())) {
 
                 for (UnspentOutput unspentOutput : useUnspentOutputs) {
-                    if (unspentOutput.getAmount().doubleValue() != 0.0) {
-                        Sha256Hash sha256Hash = new Sha256Hash(Utils.parseAsHexOrBase58(unspentOutput.getTxHash()));
-                        TransactionOutPoint outPoint = new TransactionOutPoint(CurrentNetParams.getNetParams(), unspentOutput.getVout(), sha256Hash);
-                        Script script2 = new Script(Utils.parseAsHexOrBase58(unspentOutput.getTxoutScriptPubKey()));
+                    if (unspentOutput.getSatoshis().doubleValue() != 0.0) {
+                        Sha256Hash sha256Hash = new Sha256Hash(Utils.parseAsHexOrBase58(unspentOutput.getScript()));
+                        TransactionOutPoint outPoint = new TransactionOutPoint(CurrentNetParams.getNetParams(), Long.valueOf(unspentOutput.getOutputIndex().toString()), sha256Hash);
+                        Script script2 = new Script(Utils.parseAsHexOrBase58(unspentOutput.getScript()));
                         transaction.addSignedInput(outPoint, script2, deterministicKey, Transaction.SigHash.ALL, true);
                     }
                 }
@@ -280,7 +281,7 @@ public class ContractBuilder {
         boolean isEnough = false;
         List<UnspentOutput> useUnspentOutputs = new ArrayList<>();
         for (UnspentOutput unspentOutput1 : unspentOutputs) {
-            totalAmount = totalAmount.add(unspentOutput1.getAmount());
+            totalAmount = totalAmount.add(unspentOutput1.getSatoshis().divide(new BigDecimal(100000000)));
             useUnspentOutputs.add(unspentOutput1);
             if(isEnough){
                 break;
@@ -307,10 +308,10 @@ public class ContractBuilder {
             logger.info("unspentOutput.getAddress:" + addressPayBack);
             if (deterministicKey.toAddress(CurrentNetParams.getNetParams()).toString().equals(useUnspentOutputs.get(0).getAddress())) {
                 for (UnspentOutput unspentOutput : useUnspentOutputs) {
-                    if (unspentOutput.getAmount().doubleValue() != 0.0) {
-                        Sha256Hash sha256Hash = new Sha256Hash(Utils.parseAsHexOrBase58(unspentOutput.getTxHash()));
-                        TransactionOutPoint outPoint = new TransactionOutPoint(CurrentNetParams.getNetParams(), unspentOutput.getVout(), sha256Hash);
-                        Script script2 = new Script(Utils.parseAsHexOrBase58(unspentOutput.getTxoutScriptPubKey()));
+                    if (unspentOutput.getSatoshis().doubleValue() != 0.0) {
+                        Sha256Hash sha256Hash = new Sha256Hash(Utils.parseAsHexOrBase58(unspentOutput.getTxid()));
+                        TransactionOutPoint outPoint = new TransactionOutPoint(CurrentNetParams.getNetParams(), Long.valueOf(unspentOutput.getOutputIndex().toString()), sha256Hash);
+                        Script script2 = new Script(Utils.parseAsHexOrBase58(unspentOutput.getScript()));
                         transaction.addSignedInput(outPoint, script2, deterministicKey, Transaction.SigHash.ALL, true);
                     }
                 }
@@ -634,5 +635,4 @@ public class ContractBuilder {
 
         return Hex.toHexString(out2);
     }
-
 }

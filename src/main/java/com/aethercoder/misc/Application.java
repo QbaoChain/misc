@@ -2,6 +2,7 @@ package com.aethercoder.misc;
 
 import com.aethercoder.misc.eth.EthService;
 import com.aethercoder.misc.qtum.QtumService;
+import com.aethercoder.misc.qtum.walletTransaction.UnspentOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,11 +30,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 		org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration.class})
 public class Application {
 
-	@Autowired
-	private EthService ethService;
-
-	@Autowired
-	private QtumService qtumService;
+//	@Autowired
+//	private EthService ethService;
+//
+//	@Autowired
+//	private QtumService qtumService;
 
 	public static Map<String, String> addrSeedMap = new HashMap<>();
 
@@ -93,109 +95,109 @@ public class Application {
 
 
 //	@Scheduled(fixedRate = 3000)
-	public void sendTx() throws Exception{
-		System.out.println("start send tx");
-		Set<String> toAddrs = addrSeedMap.keySet();
-		String toAddr = null;
-		for(String str : toAddrs) {
-			toAddr = str;
-		}
-//		String seed = addrSeedMap.get(toAddr);
-		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
-		if (toAddr != null) {
-			String fromAddr = "0x89ee1ab4162c8bf3193eb505993d375e7f4a8349";
-//			String contractAddr = "0xd7cbe7bfc7d2de0b35b93712f113cae4deff426b";
-			String amount = "0.00219";
-			String gasLimit = "40000";
-//			String txHash = ethService.sendTokenRawTransaction(fromAddr, toAddr, contractAddr, amount, gasLimit, seed);
-			System.out.println("fromAddr: " + fromAddr);
-			System.out.println("toAddr: " + toAddr);
-			Application.txHash = ethService.sendRawTransaction(fromAddr, toAddr, amount, gasLimit, seed);
-			System.out.println("txHash: " + Application.txHash);
-			if (Application.txHash == null) {
-				System.out.println("error sending tx: " + toAddr);
-			} else {
-				sendCount++;
-				addrSeedMap.remove(toAddr);
-
-				RandomAccessFile randomFile = new RandomAccessFile("/Users/hepengfei/Downloads/ethAddressFinished.txt", "rw");
-// 文件长度，字节数
-				long fileLength = randomFile.length();
-// 将写文件指针移到文件尾。
-				randomFile.seek(fileLength);
-				String content = toAddr;
-				randomFile.writeBytes(content+"\r\n");
-				randomFile.close();
-
-				System.out.println(sendCount + " sent. " + addrSeedMap.size() + " remaining.");
-			}
-		} else {
-			System.out.println("no address remaining. exit");
-			System.exit(0);
-		}
-		System.out.println("bbb" + toAddr);
-	}
-
-
-//	@Scheduled(fixedRate = 10000)
-	public void sendToken() throws Exception{
-		System.out.println("start send token");
-		Set<String> fromAddrs = addrSeedMap.keySet();
-		String fromAddr = null;
-		for(String str : fromAddrs) {
-			fromAddr = str;
-		}
-		String seed = addrSeedMap.get(fromAddr);
+//	public void sendTx() throws Exception{
+//		System.out.println("start send tx");
+//		Set<String> toAddrs = addrSeedMap.keySet();
+//		String toAddr = null;
+//		for(String str : toAddrs) {
+//			toAddr = str;
+//		}
+////		String seed = addrSeedMap.get(toAddr);
 //		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
-		if (fromAddr != null) {
-			String toAddr = "0x368550eb895cd118d65c1ac97cbf847591478d42";
-//			String contractAddr = "0xd7cbe7bfc7d2de0b35b93712f113cae4deff426b";
-			String amount = ethService.getTokenBalance(lftAddress, fromAddr);
-			if (!amount.equals("0")) {
-				String gasLimit = "60000";
-//			String txHash = ethService.sendTokenRawTransaction(fromAddr, toAddr, contractAddr, amount, gasLimit, seed);
-				System.out.println("fromAddr: " + fromAddr + " token: LFT balance: " + amount);
-				System.out.println("toAddr: " + toAddr);
-				Application.txHash = ethService.sendTokenRawTransaction(fromAddr, toAddr, lftAddress, amount, gasLimit, seed);
-				System.out.println("txHash: " + Application.txHash);
-				if (Application.txHash == null) {
-					System.out.println("error sending tx: " + fromAddr);
-				} else {
-					sendCount++;
-					addrSeedMap.remove(fromAddr);
-					System.out.println(sendCount + " sent. " + addrSeedMap.size() + " remaining.");
-				}
-			} else {
-				addrSeedMap.remove(fromAddr);
-				System.out.println(sendCount + " sent. " + addrSeedMap.size() + " remaining.");
-			}
-		} else {
-			System.out.println("no address remaining. exit");
-			System.exit(0);
-		}
-	}
-
-	public static String lastTxHash = null;
-//	@Scheduled(fixedRate = 60000)
-	public void sentQtumToken() throws Exception {
-		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
-		String fromAddr = "QPZhh95Gbp67KUgLsy3XZzQUPkFUuXHCw3";
-		String toAddr = "QgMXfxJk8q93iPwh1gNe7FJTFV5Dw2pWhc";
-		String contractAddr = "09800417b097c61b9fd26b3ddde4238304a110d5";
-
-		if (lastTxHash != null) {
-			int txConfirmations = qtumService.getTransactionConfirmation(lastTxHash);
-
-			if (txConfirmations == 0) {
-				System.out.println(txHash + " not confirmed yet.");
-				return;
-			}
-		}
-
-		String amount = "0.01";
-		String txid = qtumService.sendToken(seed, fromAddr, toAddr, contractAddr, "0.01");
-		System.out.println("from: " + fromAddr + " to: " + toAddr + " contract: " + contractAddr + " amount: " + amount);
-		System.out.println(txid);
-//		System.exit(0);
-	}
+//		if (toAddr != null) {
+//			String fromAddr = "0x89ee1ab4162c8bf3193eb505993d375e7f4a8349";
+////			String contractAddr = "0xd7cbe7bfc7d2de0b35b93712f113cae4deff426b";
+//			String amount = "0.00219";
+//			String gasLimit = "40000";
+////			String txHash = ethService.sendTokenRawTransaction(fromAddr, toAddr, contractAddr, amount, gasLimit, seed);
+//			System.out.println("fromAddr: " + fromAddr);
+//			System.out.println("toAddr: " + toAddr);
+//			Application.txHash = ethService.sendRawTransaction(fromAddr, toAddr, amount, gasLimit, seed);
+//			System.out.println("txHash: " + Application.txHash);
+//			if (Application.txHash == null) {
+//				System.out.println("error sending tx: " + toAddr);
+//			} else {
+//				sendCount++;
+//				addrSeedMap.remove(toAddr);
+//
+//				RandomAccessFile randomFile = new RandomAccessFile("/Users/hepengfei/Downloads/ethAddressFinished.txt", "rw");
+//// 文件长度，字节数
+//				long fileLength = randomFile.length();
+//// 将写文件指针移到文件尾。
+//				randomFile.seek(fileLength);
+//				String content = toAddr;
+//				randomFile.writeBytes(content+"\r\n");
+//				randomFile.close();
+//
+//				System.out.println(sendCount + " sent. " + addrSeedMap.size() + " remaining.");
+//			}
+//		} else {
+//			System.out.println("no address remaining. exit");
+//			System.exit(0);
+//		}
+//		System.out.println("bbb" + toAddr);
+//	}
+//
+//
+////	@Scheduled(fixedRate = 10000)
+//	public void sendToken() throws Exception{
+//		System.out.println("start send token");
+//		Set<String> fromAddrs = addrSeedMap.keySet();
+//		String fromAddr = null;
+//		for(String str : fromAddrs) {
+//			fromAddr = str;
+//		}
+//		String seed = addrSeedMap.get(fromAddr);
+////		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
+//		if (fromAddr != null) {
+//			String toAddr = "0x368550eb895cd118d65c1ac97cbf847591478d42";
+////			String contractAddr = "0xd7cbe7bfc7d2de0b35b93712f113cae4deff426b";
+//			String amount = ethService.getTokenBalance(lftAddress, fromAddr);
+//			if (!amount.equals("0")) {
+//				String gasLimit = "60000";
+////			String txHash = ethService.sendTokenRawTransaction(fromAddr, toAddr, contractAddr, amount, gasLimit, seed);
+//				System.out.println("fromAddr: " + fromAddr + " token: LFT balance: " + amount);
+//				System.out.println("toAddr: " + toAddr);
+//				Application.txHash = ethService.sendTokenRawTransaction(fromAddr, toAddr, lftAddress, amount, gasLimit, seed);
+//				System.out.println("txHash: " + Application.txHash);
+//				if (Application.txHash == null) {
+//					System.out.println("error sending tx: " + fromAddr);
+//				} else {
+//					sendCount++;
+//					addrSeedMap.remove(fromAddr);
+//					System.out.println(sendCount + " sent. " + addrSeedMap.size() + " remaining.");
+//				}
+//			} else {
+//				addrSeedMap.remove(fromAddr);
+//				System.out.println(sendCount + " sent. " + addrSeedMap.size() + " remaining.");
+//			}
+//		} else {
+//			System.out.println("no address remaining. exit");
+//			System.exit(0);
+//		}
+//	}
+//
+//	public static String lastTxHash = null;
+////	@Scheduled(fixedRate = 60000)
+//	public void sentQtumToken() throws Exception {
+//		String seed = "risk tap lovely sustain rapidly murder philosophy transmission bit suitable lake imagination";
+//		String fromAddr = "QPZhh95Gbp67KUgLsy3XZzQUPkFUuXHCw3";
+//		String toAddr = "QgMXfxJk8q93iPwh1gNe7FJTFV5Dw2pWhc";
+//		String contractAddr = "09800417b097c61b9fd26b3ddde4238304a110d5";
+//
+//		if (lastTxHash != null) {
+//			int txConfirmations = qtumService.getTransactionConfirmation(lastTxHash);
+//
+//			if (txConfirmations == 0) {
+//				System.out.println(txHash + " not confirmed yet.");
+//				return;
+//			}
+//		}
+//
+//		String amount = "0.01";
+//		String txid = qtumService.sendToken(seed, fromAddr, toAddr, contractAddr, "0.01");
+//		System.out.println("from: " + fromAddr + " to: " + toAddr + " contract: " + contractAddr + " amount: " + amount);
+//		System.out.println(txid);
+////		System.exit(0);
+//	}
 }

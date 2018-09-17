@@ -4,6 +4,8 @@ import com.aethercoder.misc.qtum.sha3.sha.Keccak;
 import com.aethercoder.misc.qtum.sha3.sha.Parameters;
 import com.aethercoder.misc.qtum.walletTransaction.*;
 import org.bitcoinj.script.Script;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +13,17 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by hepengfei on 2018/7/26.
  */
 @Service
 public class QtumService {
+    private static Logger logger = LoggerFactory.getLogger(QtumRpcController.class);
 
     @Autowired
     private QtumUtil qtumUtil;
@@ -30,6 +37,10 @@ public class QtumService {
 //        logger.info("用户 " + accountNo + " 提币成功后返回 sendRawTransactionResponse： " + sendRawTransactionResponse.toString());
         String txId = sendRawTransactionResponse.getTxid();
         return txId;
+    }
+
+    public Integer getBlockCount(){
+        return qtumUtil.getBlockCount();
     }
 
     public int getTransactionConfirmation(String txHash) {
@@ -109,7 +120,9 @@ public class QtumService {
 
         Script script = createMethodScript(abiParams, contractAddress, gasLimitInt, gasPrice);
 
-        List<UnspentOutput> unspentOutputs = getUnspentOutputs(fromAddress);
+        List<String> list = new ArrayList<>();
+        list.add(fromAddress);
+        List<UnspentOutput> unspentOutputs = getUnspentOutputs(list);
         SendRawTransactionResponse sendRawTransactionResponse = sendTx(contractBuilder.createTransactionHash(keyStorage, null, script, gasLimitInt, gasPrice,
                 decimalFeePerKb, unspentOutputs));
         return sendRawTransactionResponse;
@@ -121,37 +134,85 @@ public class QtumService {
         return script;
     }
 
-    public List<UnspentOutput> getUnspentOutputs(String address) {
-        List<String> addressList = new ArrayList<>();
-        addressList.add(address);
-        List<Map> list = qtumUtil.getConfirmUnspentByAddresses(addressList);
-        List<UnspentOutput> unspentOutputList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            Map map = (Map) list.get(i);
-            UnspentOutput unspentOutput = new UnspentOutput();
-            unspentOutput.setAddress((String) map.get("address"));
-            unspentOutput.setTxHash((String) map.get("txid"));
-            unspentOutput.setVout((Integer) map.get("outputIndex"));
-            unspentOutput.setTxoutScriptPubKey((String) map.get("script"));
-            unspentOutput.setBlockHeight(Long.valueOf(map.get("height").toString()));
-            unspentOutput.setStake((Boolean) map.get("isStake"));
-            BigDecimal satoshis = new BigDecimal(map.get("satoshis").toString());
-            unspentOutput.setAmount(qtumUtil.convertQtumAmount(satoshis));
-            unspentOutput.setConfirmations((Integer) map.get("confirmations"));
-            unspentOutputList.add(unspentOutput);
-        }
+    /*
+     * 先将地址importaddress导入节点，再使用listaddressgroupings获取用户余额
+     */
+    public List<UnspentOutput> getUnspentOutputs(List<String> addressList) {
+        long time1 = System.currentTimeMillis();
+        // 获取所有地址的UTXO
+        List<List<Object>> list = getConfirmUnspentByAddresses(addressList);
+        System.out.println("getConfirmUnspentByAddresses time is: " + (System.currentTimeMillis() - time1));
 
-        for (Iterator<UnspentOutput> iterator = unspentOutputList.iterator(); iterator.hasNext(); ) {
-            UnspentOutput unspentOutput = iterator.next();
-            //remove confirmations<500的数据
-            if (!unspentOutput.isOutputAvailableToPay()) {
-                iterator.remove();
+        Integer blockCount = getBlockCount();
+        List<UnspentOutput> unspentOutputList = new ArrayList<>();
+        List<String> uniqueList = new ArrayList<String>();
+        String uniqueStr = "";
+        for (int i = 0; i < list.size(); i++) {
+            for(int j = 0; j < list.get(i).size(); j++){
+                Map map = (Map) list.get(i).get(j);
+                uniqueStr = map.get("txid").toString() + "_" + map.get("vout").toString();
+                if (uniqueList.contains(uniqueStr))
+                {
+                    continue;
+                }
+
+                uniqueList.add(uniqueStr);
+                UnspentOutput unspentOutput = new UnspentOutput();
+                unspentOutput.setAddress((String) map.get("address"));
+                unspentOutput.setSatoshis(qtumUtil.covertDecimalAmount(new BigDecimal(map.get("amount").toString()), 8));
+                unspentOutput.setTxid((String) map.get("txid"));
+                unspentOutput.setScript((String) map.get("scriptPubKey"));
+                unspentOutput.setOutputIndex(new BigDecimal(map.get("vout").toString()));
+                unspentOutput.setConfirmations(new BigDecimal(map.get("confirmations").toString()));
+                unspentOutput.setHeight(new BigDecimal((blockCount - (Integer)map.get("confirmations"))));
+                unspentOutputList.add(unspentOutput);
             }
         }
-        Collections.sort(unspentOutputList, (unspentOutput, t1) ->
-                unspentOutput.getAmount().doubleValue() < t1.getAmount().doubleValue() ? 1 : unspentOutput.getAmount().doubleValue() > t1.getAmount().doubleValue() ? -1 : 0);
 
+        System.out.println("unspentOutputList size: " + unspentOutputList.size());
+        Collections.sort(unspentOutputList, (unspentOutput, t1) ->
+                unspentOutput.getSatoshis().doubleValue() < t1.getSatoshis().doubleValue() ? 1 : unspentOutput.getSatoshis().doubleValue() > t1.getSatoshis().doubleValue() ? -1 : 0);
         return unspentOutputList;
+    }
+
+    private List getConfirmUnspentByAddresses(List<String> addressList) {
+        Integer peersNumber = qtumUtil.getPeersNumber();
+
+        List resultList = new Vector<>();
+        try {
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 200, TimeUnit.MILLISECONDS,
+                    new ArrayBlockingQueue<Runnable>(20));
+            CountDownLatch count = new CountDownLatch(addressList.size());
+            for (int i = 0; i < addressList.size(); i++) {
+                List<String> addrList = new ArrayList<String>();
+                addrList.add(addressList.get(i));
+                executor.execute(new ImportAddressThread2(qtumUtil, addrList, i % peersNumber, null, count));
+            }
+            count.await();
+
+            if(peersNumber > addressList.size()){
+                peersNumber = addressList.size();
+            }
+            CountDownLatch count1 = new CountDownLatch(peersNumber);
+            ThreadPoolExecutor executor1 = new ThreadPoolExecutor(10, 10, 200, TimeUnit.MILLISECONDS,
+                    new ArrayBlockingQueue<Runnable>(20));
+            for (int i = 0; i < peersNumber; i++) {
+                List addrList = new ArrayList();
+                for (int j = 0; j < addressList.size(); j++) {
+                    if (i == j % peersNumber) {
+                        addrList.add(addressList.get(j));
+                    }
+                }
+
+                executor1.execute(new ImportAddressThread(qtumUtil, addrList, i % peersNumber, resultList, count1));
+            }
+            count1.await();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return resultList;
     }
 
     private SendRawTransactionResponse sendTx(String txHex) {
@@ -162,4 +223,31 @@ public class QtumService {
         return sendRawTransactionResponse;
     }
 
+    public List<HashMap> callContract(String contract, List<String> params) {
+        return qtumUtil.callContract(contract, params);
+    }
+
+    public String sendRawTransaction(String rawTransaction) {
+        return (String)qtumUtil.sendRawTransaction(rawTransaction);
+    }
+
+    public Double estimateFee(Integer nBlocks) {
+        return qtumUtil.estimateFee(nBlocks);
+    }
+
+    public HashMap getTransaction(String txHash) {
+        return qtumUtil.getTransaction(txHash);
+    }
+
+    public HashMap getDGPInfo() {
+        HashMap hashMap = new HashMap();
+        hashMap.put("maxblocksize", 2000000);
+        hashMap.put("mingasprice", 40);
+        hashMap.put("blockgaslimit", 40000000);
+        return hashMap;
+    }
+
+    public String getHexAddress(String address) {
+        return (String)qtumUtil.getHexAddress(address);
+    }
 }
