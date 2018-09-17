@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.aethercoder:qbao-basic:1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/aethercoder/qbao-basic/1.0-SNAPSHOT/qbao-basic-1.0-20180828.042311-81.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/aethercoder/qbao-basic/1.0-SNAPSHOT/qbao-basic-1.0-20180828.042311-81-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/aethercoder/qbao-basic/1.0-SNAPSHOT/qbao-basic-1.0-20180828.042311-81-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
