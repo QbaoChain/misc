@@ -41,11 +41,9 @@ public class ImportAddressThread implements Runnable {
     @Override
     public void run(){
         if (resultList == null){
-            long time1 = System.currentTimeMillis();
 
             qtumUtil.callQtumService("importaddress", addressList, number);
 
-            System.out.println("importaddress time " + number +" is: " + (System.currentTimeMillis() - time1));
             count.countDown();
         }
         else{

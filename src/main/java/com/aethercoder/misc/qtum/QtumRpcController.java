@@ -1,7 +1,6 @@
 package com.aethercoder.misc.qtum;
 
 import com.aethercoder.basic.utils.BeanUtils;
-import com.aethercoder.misc.qtum.walletTransaction.GambleGameWithdraw;
 import io.swagger.annotations.Api;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.params.QtumMainNetParams;
@@ -11,9 +10,14 @@ import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping( value = "qtumRPC", produces = "application/json")
@@ -160,5 +164,52 @@ public class QtumRpcController {
         logger.info("qbaoChainWithDraw");
         GambleGameWithdraw gambleGameWithdraw = new GambleGameWithdraw(qtumService,flag);
         gambleGameWithdraw.withdraw();
+    }
+
+    /**
+     * 批量转账（使用意图：性能摸底）
+     */
+    @RequestMapping( value = "/qbaochain/bantchTransfer", method = RequestMethod.POST)
+    public void transfer() throws Exception{
+        logger.info("qbaoChainBantchTransfer");
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 200, TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<Runnable>(20));
+        for (int i = 0; i < 3; i++) {
+            executor.execute(new BantchTransferThread(qtumService, i));
+            System.out.println("peerNum is:" + i);
+        }
+    }
+
+    /**
+     * 获取未打包的交易数量
+     */
+    @RequestMapping( value = "/qbaochain/getRawMemPoolCount", method = RequestMethod.POST)
+    public Integer getRawMemPoolCount() throws Exception{
+        logger.info("getRawMemPoolCount");
+        return qtumService.getRawMemPool();
+    }
+
+    /**
+     * 间隔0.5秒 循环打印区块高度
+     */
+    @RequestMapping( value = "/qbaochain/getBlockCountWhile", method = RequestMethod.POST)
+    public void getBlockCountWhile() throws Exception{
+        logger.info("getBlockCountWhile");
+
+        while(true){
+            Thread.sleep(500);
+            System.out.println(System.currentTimeMillis() + " -- 当前区块高度" + qtumService.getBlockCount());
+        }
+    }
+
+    /**
+     * 获取区块高度为X的包含的交易数
+     */
+    @RequestMapping( value = "/qbaochain/getBlockTxs", method = RequestMethod.GET)
+    public Integer getBlockTxs(Integer blockCount) throws Exception{
+        logger.info("getBlockTxs");
+
+        return qtumService.getBlockTxs(blockCount);
     }
 }

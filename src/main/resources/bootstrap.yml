@@ -8,9 +8,9 @@ web3j:
   url: http://api.etherscan.io/api
 
 qtum:
-  httpUrl: http://47.100.27.65:13889
-  url: http://47.100.27.65:13889
-  url1: http://47.100.27.65:13889
-  url2: http://47.100.27.65:13889
+  httpUrl: http://localhost:13889
+  url: http://localhost:13889
+  url1: http://localhost:13889
+  url2: http://localhost:13889
   username: admin
   password: admin

@@ -45,7 +45,6 @@ public class ImportAddressThread2 implements Runnable {
 
             qtumUtil.callQtumService("importaddress", addressList, number);
 
-            System.out.println("importaddress time " + number +" is: " + (System.currentTimeMillis() - time1));
             count.countDown();
         }
         else{
@@ -54,9 +53,7 @@ public class ImportAddressThread2 implements Runnable {
             paramList.add(100000000);
             paramList.add(addressList);
 
-            long time1 = System.currentTimeMillis();
             resultList.add((List)qtumUtil.callQtumService("listunspent", paramList, number));
-            System.out.println("listunspentThread time " + number +" is: " + (System.currentTimeMillis() - time1));
             count.countDown();
         }
     }
