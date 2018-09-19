@@ -27,4 +27,31 @@ public class CommonUtility {
             return "0";
         }
     }
+
+    private static String hashPattern = "0000000000000000000000000000000000000000000000000000000000000000";
+    public static String paddingAfter(String _value) {
+        if(_value.length() > 64){
+            StringBuilder sb = new StringBuilder();
+            int length = _value.length();
+            int padding = length % 64;
+            sb.append(_value);
+            sb.append(hashPattern.substring(padding));
+            return sb.toString();
+        }
+        return _value + hashPattern.substring(_value.length());
+    }
+
+    public static String paddingBefore(String _value){
+        if(_value.length() > 64){
+            StringBuilder sb = new StringBuilder();
+            int length = _value.length();
+            int padding = length % 64;
+            sb.append(hashPattern.substring(padding));
+            sb.append(_value);
+            return sb.toString();
+        }
+        return hashPattern.substring(_value.length()) + _value;
+    }
+
+
 }

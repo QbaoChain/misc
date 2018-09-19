@@ -238,6 +238,10 @@ public class QtumService {
         return qtumUtil.callContract(contract, params);
     }
 
+    public List<TransactionModel> callContractModel(String contract, List<String> params) {
+        return qtumUtil.callContractModel(contract, params);
+    }
+
     public String sendRawTransaction(String rawTransaction) {
         return (String) qtumUtil.sendRawTransaction(rawTransaction);
     }

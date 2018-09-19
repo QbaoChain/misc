@@ -1,6 +1,7 @@
 package com.aethercoder.misc.qtum;
 
 import com.aethercoder.basic.utils.BeanUtils;
+import com.aethercoder.misc.qtum.walletTransaction.TransactionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -145,6 +146,20 @@ public class QtumUtil {
             HashMap map = (HashMap) callQtumService("callcontract", list);
             map.put("hash", param);
             result.add(map);
+        }
+
+        return result;
+    }
+
+    public List<TransactionModel> callContractModel(String contract, List<String> params) {
+        List<TransactionModel> result = new ArrayList<>();
+        for (String param : params) {
+            List<Object> list = new ArrayList<>();
+            list.add(contract);
+            list.add(param);
+            HashMap map = (HashMap) callQtumService("callcontract", list);
+            TransactionModel model = new TransactionModel(map, param);
+            result.add(model);
         }
 
         return result;

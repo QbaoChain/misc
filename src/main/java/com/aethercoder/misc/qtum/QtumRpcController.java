@@ -1,6 +1,8 @@
 package com.aethercoder.misc.qtum;
 
 import com.aethercoder.basic.utils.BeanUtils;
+import com.aethercoder.misc.qtum.walletTransaction.CommonUtility;
+import com.aethercoder.misc.qtum.walletTransaction.TransactionModel;
 import io.swagger.annotations.Api;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.params.QtumMainNetParams;
@@ -8,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -64,7 +67,25 @@ public class QtumRpcController {
         logger.info("contract/call");
         Map<String, List> map = new HashMap<>();
         String contractAddress = (String)param.get("contractAddress");
-        map.put("result", qtumService.callContract(contractAddress, (List)param.get("param")));
+        StringBuilder sb = new StringBuilder();
+        String functionId = (String) param.get("functionId");
+        List rawParam = (List)param.get("param");
+        sb.append(functionId);
+/*        for(Object p:rawParam){  智能合约byte32指令构成
+            sb.append(CommonUtility.paddingAfter(Hex.toHexString(((String)p).getBytes())));
+        }*/
+        /** 智能合约string参数构成  */
+        sb.append("0000000000000000000000000000000000000000000000000000000000000020");
+        for(Object p: rawParam){
+            String cmd = (String) p;
+            sb.append(CommonUtility.paddingBefore(Integer.toHexString(cmd.length())));
+            sb.append(CommonUtility.paddingAfter(Hex.toHexString(cmd.getBytes())));
+        }
+        /** 智能合约string参数构成  */
+
+        ArrayList<String> params = new ArrayList<>();
+        params.add(sb.toString());
+        map.put("result", qtumService.callContractModel(contractAddress, params));
         return map;
     }
 
