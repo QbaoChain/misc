@@ -2,3 +2,7 @@
 /target
 .DS_Store
 qbao-misc.iml
+./idea
+./mvn
+./target
+./qbao-misc.iml
