@@ -233,4 +233,5 @@ public class QtumRpcController {
 
         return qtumService.getBlockTxs(blockCount);
     }
+
 }
