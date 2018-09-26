@@ -55,7 +55,6 @@ public class QtumRpcController {
         System.out.println("getUnspent: " + (System.currentTimeMillis() - time0));
         return lists;
     }
-
     /**
      * 调用合约（不广播）
      * @param param 参数内容
@@ -64,6 +63,22 @@ public class QtumRpcController {
      */
     @RequestMapping( value = "/contract/call", method = RequestMethod.POST, consumes = "application/json" )
     public Map<String, List> callContract(@RequestBody Map param) throws Exception{
+        logger.info("contract/call");
+        Map<String, List> map = new HashMap<>();
+        String contractAddress = (String)param.get("contractAddress");
+        map.put("result", qtumService.callContract(contractAddress, (List)param.get("param")));
+        return map;
+    }
+
+
+    /**
+     * 调用合约（不广播）
+     * @param param 参数内容
+     * @return 合约返回结果
+     * @throws Exception 异常
+     */
+    @RequestMapping( value = "/contract/callString", method = RequestMethod.POST, consumes = "application/json" )
+    public Map<String, List> callContractString(@RequestBody Map param) throws Exception{
         logger.info("contract/call");
         Map<String, List> map = new HashMap<>();
         String contractAddress = (String)param.get("contractAddress");

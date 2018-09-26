@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.web3j.abi.datatypes.Int;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -250,7 +248,7 @@ public class QtumUtil {
             e.printStackTrace();
             result = protectCallQtumService(method, params, 1, request);
         }
-        return result.get("result");
+        return result != null ? result.get("result") : new HashMap();
     }
 
     private HashMap protectCallQtumService(String method, Object params, Integer peerNum, HttpEntity<String> request){

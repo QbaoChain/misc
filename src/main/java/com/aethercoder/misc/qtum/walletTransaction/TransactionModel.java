@@ -24,6 +24,8 @@ import java.util.List;
  */
 
 public class TransactionModel {
+    // define constransts
+    private final static int HEX_INSTRUCTION_SIZE = 64;
 
     public String address;
     public ExecutionResult executionResult;
