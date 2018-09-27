@@ -154,7 +154,6 @@ public class QtumService {
         long time1 = System.currentTimeMillis();
         // 获取所有地址的UTXO
         List<List<Object>> list = getConfirmUnspentByAddresses(addressList);
-        System.out.println("getConfirmUnspentByAddresses time is: " + (System.currentTimeMillis() - time1));
 
         Integer blockCount = getBlockCount();
         List<UnspentOutput> unspentOutputList = new ArrayList<>();
@@ -181,7 +180,6 @@ public class QtumService {
             }
         }
 
-        System.out.println("unspentOutputList size: " + unspentOutputList.size());
         Collections.sort(unspentOutputList, (unspentOutput, t1) ->
                 unspentOutput.getSatoshis().doubleValue() < t1.getSatoshis().doubleValue() ? 1 : unspentOutput.getSatoshis().doubleValue() > t1.getSatoshis().doubleValue() ? -1 : 0);
         return unspentOutputList;

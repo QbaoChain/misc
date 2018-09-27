@@ -211,7 +211,7 @@ public class QtumRpcController {
 
         ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 200, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<Runnable>(20));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             executor.execute(new BantchTransferThread(qtumService, i));
             System.out.println("peerNum is:" + i);
         }
@@ -234,7 +234,7 @@ public class QtumRpcController {
         logger.info("getBlockCountWhile");
 
         while(true){
-            Thread.sleep(500);
+            Thread.sleep(250);
             System.out.println(System.currentTimeMillis() + " -- 当前区块高度" + qtumService.getBlockCount());
         }
     }

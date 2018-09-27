@@ -23,8 +23,7 @@ public class BantchTransferThread implements Runnable{
             String fromAddress = "QRVTEo2tKqje1cDc72amhCodeGvHfz1yKE";
 
             for (int i = 0; i < 10000; i++){
-                System.out.println("sendRawTransaction peerNum is :" + peerNum);
-                qtumService.transferByPeerNum(seedString, toAddress, "0.5", "0.04", fromAddress, peerNum);
+                qtumService.transferByPeerNum(seedString, toAddress, "0.05", "0.04", fromAddress, peerNum);
             }
 
             System.out.println("TRANSFER time is" + (System.currentTimeMillis() - time));
